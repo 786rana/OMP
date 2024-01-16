@@ -1,0 +1,37 @@
+﻿
+@page "/seller-dashboard"
+@inject SellerService sellerService
+
+<h3>Seller Dashboard</h3>
+
+@if (IsSellerAuthenticated)
+{
+    <p>Welcome, @CurrentSeller.Name!</p>
+
+    <h4>Your Products</h4>
+    <div class="row">
+        @foreach (var product in sellerService.GetProductsForSeller(CurrentSeller.Id))
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">$@product.Price</p>
+                        <a href="/product-details/@product.Id" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>You are not authenticated as a seller. Please log in as a seller.</p>
+}
+
+@code {
+    private bool IsSellerAuthenticated => /* Implement logic to check seller authentication */;
+
+    private Seller CurrentSeller => /* Implement logic to get current seller information */;
+}
+

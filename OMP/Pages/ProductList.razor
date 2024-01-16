@@ -1,0 +1,36 @@
+﻿
+@page "/"
+@using OMP.Data;
+@inject ProductService ProductService
+<h1>Product Listing</h1>
+
+<div>
+    @foreach (var product in Product)
+    {
+        <div>
+            <h3>@product.Name</h3>
+            <p>@product.Price.ToString("C")</p>
+            <button @onclick="() => AddToCart(product)">Add to Cart</button>
+        </div>
+    }
+</div>
+
+@code {
+    private void AddToCart(Product product)
+    {
+        
+    }
+public class ProductService
+    {
+        public List<Product> GetProducts()
+        {
+            return new List<Product>
+        {
+            new Product { Id = 1, Name = "Product 1", Price = 19.99m },
+            new Product { Id = 2, Name = "Product 2", Price = 29.99m },
+            new Product { Id = 3, Name = "Product 3", Price = 39.99m },
+        };
+   }
+}
+    }
+}

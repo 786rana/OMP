@@ -1,0 +1,80 @@
+﻿<!-- Pages/SellerDashboard.razor -->
+@page "/seller-dashboard"
+@inject SellerService sellerService
+
+<h3>Seller Dashboard</h3>
+
+<!-- Display Sellers -->
+@if (sellers.Any())
+{
+    <h4>All Sellers</h4>
+    <ul>
+        @foreach (var seller in sellers)
+        {
+            <li>
+                @seller.Name
+                <button @onclick="() => EditSeller(seller.Id)">Edit</button>
+                <button @onclick="() => DeleteSeller(seller.Id)">Delete</button>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No sellers available.</p>
+}
+
+<!-- Add/Edit Seller Form -->
+<h4>Add/Edit Seller</h4>
+<div>
+    <input type="text" @bind="newSeller.Name" placeholder="Seller name" />
+    <button @onclick="AddOrUpdateSeller">Save</button>
+</div>
+
+@code {
+    private List<Seller> sellers = new List<Seller>();
+    private Seller newSeller = new Seller();
+
+    protected override void OnInitialized()
+    {
+        LoadSellers();
+    }
+
+    private void LoadSellers()
+    {
+        sellers = sellerService.GetAllSellers();
+    }
+
+    private void AddOrUpdateSeller()
+    {
+        if (newSeller.Id == 0)
+        {
+            // Add new seller
+            sellerService.AddSeller(newSeller);
+        }
+        else
+        {
+            // Update existing seller
+            sellerService.UpdateSeller(newSeller);
+        }
+
+        newSeller = new Seller(); // Clear the form
+        LoadSellers(); // Refresh the seller list
+    }
+
+    private void EditSeller(int sellerId)
+    {
+        var existingSeller = sellerService.GetSellerById(sellerId);
+
+        if (existingSeller != null)
+        {
+            newSeller = existingSeller; // Populate the form with existing seller data
+        }
+    }
+
+    private void DeleteSeller(int sellerId)
+    {
+        sellerService.DeleteSeller(sellerId);
+        LoadSellers(); // Refresh the seller list
+    }
+}
